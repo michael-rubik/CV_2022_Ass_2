@@ -1,0 +1,19 @@
+name: env_A2
+channels:
+  - conda-forge
+  - pytorch
+dependencies:
+  - numpy=1.19.1
+  - matplotlib=3.3.1
+  - python=3.8
+  - jupyter=1.0.0
+  - opencv=4.4.0
+  - pillow=8.4.0
+  - scipy=1.7.1
+  - scikit-image=0.18.1  
+  - scikit-learn=1.0
+  - pytorch=1.10.0
+  - torchvision=0.11.1
+  - torchinfo
+  - tqdm=4.62.3
+  
