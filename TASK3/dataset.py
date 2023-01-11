@@ -53,9 +53,11 @@ class SceneDataset():
                 for image_name in image_names:
                     image_path = os.path.join(image_dir_path, image_name)
                     image = cv2.imread(image_path)
-                    grayscale_normal_image = cv2.normalize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), None, 0, 255).astype("uint8")
+                    grayscale_normal_image = cv2.normalize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), None, 0, 1, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
                     img_data.append(grayscale_normal_image)
                     labels.append(class_label_idx)
+
+                    print(grayscale_normal_image)
 
             class_label_idx += 1
         # student_code end
