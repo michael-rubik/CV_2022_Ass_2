@@ -20,10 +20,28 @@ def extract_dsift(images: List[np.ndarray], stepsize: int, num_samples: int = No
     num_samples : random number of samples per image (optional) - int
     """
 
+
     tic = time.perf_counter()
 
     # student_code start
-    raise NotImplementedError("TO DO in features.py")
+    # raise NotImplementedError("TO DO in features.py")
+    all_descriptors = []
+
+    # Build grid of stepsize spaced keypoints and take subsample
+    width, height = images[0].shape
+    grid = [cv2.KeyPoint(x+(stepsize/2), y+(stepsize/2), stepsize) for x in range(0, width, stepsize) for y in range(0, height, stepsize)]
+    if num_samples != None:
+        grid = random.sample(grid, num_samples)
+
+    # Create cv2-sift object
+    num_sift_features = 100
+    sift = cv2.SIFT_create(num_sift_features)
+
+    # SOMETHINGS WRONG! image_descriptors are just [0,0,0,..] currently
+    # For every image, get descriptors for keypoints and save them to all_descriptors
+    for image in images:
+        _, image_descriptors = sift.compute(image, grid)
+        all_descriptors.append(image_descriptors)
     # student_code end
 
     toc = time.perf_counter()

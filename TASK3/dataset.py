@@ -9,7 +9,7 @@ import os
 class SceneDataset():
     images = []         # list of images
     labels = []         # list of labels of images
-    class_names = ""    # list with of class names (folder names)
+    class_names = ""    # list with of class names (folder names) 
 
     def __init__(self, path: str):
         """
@@ -21,7 +21,43 @@ class SceneDataset():
         """
 
         # student_code start
-        raise NotImplementedError("TO DO in dataset.py")
+        # raise NotImplementedError("TO DO in dataset.py")
+
+        img_data = []
+        labels = []
+        dirs = []
+
+        # Get list of (dirpath, dirnames, filenames)-tuples 
+        # for every subfolder under path/ including folder path/ itself
+        dirtree = os.walk(path, topdown=True, onerror=None, followlinks=False)
+        
+        # Class labels should start at 0
+        class_label_idx = 0
+
+        # For every entry in the directory tree (distree_entries)
+        for entry in dirtree:
+            # If dirpath is path itself, the dirnames are the names of path/ subfolders (= class names)
+            # save name to list
+            if entry[0] == path:
+                dirs.append(entry[1])
+
+            # If dirpath is not path we are looking at a subfolder of path/
+            # thus filenames contains a list of the names of images in the subfolder 
+            else:
+                image_dir_path = entry[0]  
+                image_names = entry[2]
+
+                # For each image in subfolder build the valid path
+                # read, grayscale, normalize and save image to list
+                # save the index of the associated class label to list
+                for image_name in image_names:
+                    image_path = os.path.join(image_dir_path, image_name)
+                    image = cv2.imread(image_path)
+                    grayscale_normal_image = cv2.normalize(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), None, 0, 255).astype("uint8")
+                    img_data.append(grayscale_normal_image)
+                    labels.append(class_label_idx)
+
+            class_label_idx += 1
         # student_code end
 
         """
