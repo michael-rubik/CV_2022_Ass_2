@@ -57,8 +57,6 @@ class SceneDataset():
                     img_data.append(grayscale_normal_image)
                     labels.append(class_label_idx)
 
-                    print(grayscale_normal_image)
-
             class_label_idx += 1
         # student_code end
 

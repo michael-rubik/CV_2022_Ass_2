@@ -37,10 +37,10 @@ def extract_dsift(images: List[np.ndarray], stepsize: int, num_samples: int = No
     num_sift_features = 100
     sift = cv2.SIFT_create(num_sift_features)
 
-    # SOMETHINGS WRONG! image_descriptors are just [0,0,0,..] currently
     # For every image, get descriptors for keypoints and save them to all_descriptors
     for image in images:
-        _, image_descriptors = sift.compute(image, grid)
+        image_int = cv2.normalize(image, None, 0, 255.5, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+        _, image_descriptors = sift.compute(image_int, grid)
         all_descriptors.append(image_descriptors)
     # student_code end
 
@@ -65,7 +65,27 @@ def count_visual_words(dense_feat: List[np.ndarray], centroids: List[np.ndarray]
     tic = time.perf_counter()
 
     # student_code start
-    raise NotImplementedError("TO DO in features.py")
+    # raise NotImplementedError("TO DO in features.py")
+    
+    histograms = [] 
+
+    # For every image look at computed features
+    for image_features in dense_feat:
+        '''
+            pairwise_distances returns:
+            Dndarray of shape (n_samples_X, n_samples_X) or (n_samples_X, n_samples_Y)
+                (...)
+                If Y is not None, then D_{i, j} is the distance between the ith array from X and the jth array from Y.  
+        '''
+        image_histogram = np.zeros((len(centroids)), dtype=np.int64)
+        distance_matrix = sklearn_pairwise.pairwise_distances(image_features, centroids)
+
+        for i in range(len(image_features)):
+            centroid_idx = np.argmin(distance_matrix[i])
+            image_histogram[centroid_idx] += 1
+
+        histograms.append(image_histogram)
+
     # student_code end
 
     toc = time.perf_counter()

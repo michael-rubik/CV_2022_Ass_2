@@ -22,7 +22,7 @@ def plot_confusion_matrix(gt_labels, predicted, accuracy, class_names, group_no=
     labels.extend(predicted)
     labels = list(set(labels))
     labels.sort()
-    class_names = [class_names[i] for i in labels]
+    class_names = [class_names[i-1] for i in labels]
 
     cm = confusion_matrix(gt_labels, predicted)
 
