@@ -22,7 +22,15 @@ class MaskClassifier(nn.Module):
         """
 
         # student code start
-        pass
+        super().__init__()
+
+        self.name = name
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3)
+        self.maxpool1 = nn.MaxPool2d(kernel_size=2)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3)
+        self.maxpool2 = nn.MaxPool2d(kernel_size=2)
+        self.linear = nn.Linear(in_features=6272, out_features=1)
+
         # student code end
 
     def forward(self, x: Tensor):
@@ -32,7 +40,19 @@ class MaskClassifier(nn.Module):
         """
 
         # student code start
-        raise NotImplementedError("TO DO in my_model.py")
+        
+        x = self.conv1(x)
+        x = self.maxpool1(x)
+        x = torch.nn.functional.relu(x)
+        x = self.conv2(x)
+        x = self.maxpool2(x)     
+        x = torch.nn.functional.relu(x)  
+        x = x.view(x.size(0), -1)
+        x = self.linear(x)
+
+        print(min(x))
+        print(max(x))
+
         # student code end
 
         return x

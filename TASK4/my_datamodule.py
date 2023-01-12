@@ -56,10 +56,17 @@ class DataModule:
         data_transforms = None
 
         # student code start
-        raise NotImplementedError("TO DO in my_datamodule.py")
+
+        # Resize to 64x64 pixel and normalize (transforms.ToTensor() normalizes to [0,1])
+        data_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize((64, 64))])
+        
+        if self.augmented:
+            #! TODO: Add augmentation transforms
+            data_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize((64, 64))])
+        
         # student code end
 
-        return data_transform
+        return data_transforms
 
     def train_dataloader(self):
         # returns the train dataloader
