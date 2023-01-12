@@ -61,8 +61,7 @@ class DataModule:
         data_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize((64, 64))])
         
         if self.augmented:
-            #! TODO: Add augmentation transforms
-            data_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize((64, 64))])
+            data_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize((64, 64)), transforms.RandomHorizontalFlip(p=0.5), transforms.ColorJitter(brightness=(0.5, 1), contrast=(0.9, 1), saturation=(0.5,0.7), hue=0), transforms.RandomRotation(degrees=33)])
         
         # student code end
 
