@@ -24,24 +24,26 @@ def extract_dsift(images: List[np.ndarray], stepsize: int, num_samples: int = No
     tic = time.perf_counter()
 
     # student_code start
-    # raise NotImplementedError("TO DO in features.py")
-    all_descriptors = []
 
-    # Build grid of stepsize spaced keypoints and take subsample
+    all_descriptors = []
     width, height = images[0].shape
+
+    # Build grid of keypoints with stepsize
+    # Start at x,y = stepsize/2 for even distribution (supposed width, height divides stepsize without remainder)
     grid = [cv2.KeyPoint(x+(stepsize/2), y+(stepsize/2), stepsize) for x in range(0, width, stepsize) for y in range(0, height, stepsize)]
+    
+    # If specified choose subsample of grid keypoints
     if num_samples != None:
         grid = random.sample(grid, num_samples)
 
-    # Create cv2-sift object
-    num_sift_features = 100
-    sift = cv2.SIFT_create(num_sift_features)
+    sift = cv2.SIFT_create(nfeatures=100)
 
-    # For every image, get descriptors for keypoints and save them to all_descriptors
+    # On every image, compute descriptors for (subsampled) grid and save them to all_descriptors
     for image in images:
         image_int = cv2.normalize(image, None, 0, 255.5, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
         _, image_descriptors = sift.compute(image_int, grid)
         all_descriptors.append(image_descriptors)
+
     # student_code end
 
     toc = time.perf_counter()
@@ -65,22 +67,18 @@ def count_visual_words(dense_feat: List[np.ndarray], centroids: List[np.ndarray]
     tic = time.perf_counter()
 
     # student_code start
-    # raise NotImplementedError("TO DO in features.py")
     
     histograms = [] 
 
-    # For every image look at computed features
-    for image_features in dense_feat:
-        '''
-            pairwise_distances returns:
-            Dndarray of shape (n_samples_X, n_samples_X) or (n_samples_X, n_samples_Y)
-                (...)
-                If Y is not None, then D_{i, j} is the distance between the ith array from X and the jth array from Y.  
-        '''
+    # For descriptors of every image (dense_feat has shape [number_of_images x num_samples x 128])
+    # we compare the distance of every descriptor to every cluster centroid
+    for image_descriptors in dense_feat:
         image_histogram = np.zeros((len(centroids)), dtype=np.int64)
-        distance_matrix = sklearn_pairwise.pairwise_distances(image_features, centroids)
 
-        for i in range(len(image_features)):
+        distance_matrix = sklearn_pairwise.pairwise_distances(image_descriptors, centroids)
+        # For every descriptor we look for the closest cluster centroid
+        # and count up the corresponding histogram index
+        for i in range(len(image_descriptors)):
             centroid_idx = np.argmin(distance_matrix[i])
             image_histogram[centroid_idx] += 1
 

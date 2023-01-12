@@ -21,7 +21,6 @@ class SceneDataset():
         """
 
         # student_code start
-        # raise NotImplementedError("TO DO in dataset.py")
 
         img_data = []
         labels = []
@@ -58,6 +57,7 @@ class SceneDataset():
                     labels.append(class_label_idx)
 
             class_label_idx += 1
+            
         # student_code end
 
         """
