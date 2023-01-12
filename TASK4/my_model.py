@@ -24,12 +24,26 @@ class MaskClassifier(nn.Module):
         # student code start
         super().__init__()
 
+        # Network layers
         self.name = name
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3)
         self.maxpool1 = nn.MaxPool2d(kernel_size=2)
         self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3)
         self.maxpool2 = nn.MaxPool2d(kernel_size=2)
         self.linear = nn.Linear(in_features=6272, out_features=1)
+        self.batchnorm_active = False
+        self.dropout_active = False
+
+        # Additional layers for regularization
+        if batch_norm:
+            self.batchnorm1 = nn.BatchNorm2d(num_features=32)
+            self.batchnorm2 = nn.BatchNorm2d(num_features=32)
+            self.batchnorm_active = True
+
+        if dropout != 0:
+            self.dropout = nn.Dropout(p=dropout)
+            self.dropout_active = True
+
 
         # student code end
 
@@ -42,16 +56,24 @@ class MaskClassifier(nn.Module):
         # student code start
         
         x = self.conv1(x)
+        if self.batchnorm_active:
+            x = self.batchnorm1(x)
         x = self.maxpool1(x)
         x = torch.nn.functional.relu(x)
+
         x = self.conv2(x)
+        if self.batchnorm_active:
+            x = self.batchnorm2(x)
         x = self.maxpool2(x)     
         x = torch.nn.functional.relu(x)  
-        x = x.view(x.size(0), -1)
-        x = self.linear(x)
 
-        print(min(x))
-        print(max(x))
+        x = x.view(x.size(0), -1)
+
+        if self.dropout_active:
+            x = self.dropout(x)
+            
+        x = self.linear(x)
+        x = torch.nn.functional.sigmoid(x)
 
         # student code end
 
