@@ -73,7 +73,7 @@ class MaskClassifier(nn.Module):
             x = self.dropout(x)
             
         x = self.linear(x)
-        x = torch.nn.functional.sigmoid(x)
+        x = torch.sigmoid(x)
 
         # student code end
 
