@@ -57,7 +57,7 @@ class SceneDataset():
                     labels.append(class_label_idx)
 
             class_label_idx += 1
-            
+        
         # student_code end
 
         """

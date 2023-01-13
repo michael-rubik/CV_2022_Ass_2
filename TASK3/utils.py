@@ -17,6 +17,7 @@ def plot_confusion_matrix(gt_labels, predicted, accuracy, class_names, group_no=
     name : filename (without extension) (optional)
     """
 
+
     labels = []
     labels.extend(gt_labels)
     labels.extend(predicted)
