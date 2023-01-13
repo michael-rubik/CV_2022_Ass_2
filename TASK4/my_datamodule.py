@@ -61,7 +61,9 @@ class DataModule:
         data_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize((64, 64))])
         
         if self.augmented:
-            data_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize((64, 64)), transforms.RandomHorizontalFlip(p=0.5), transforms.ColorJitter(brightness=(0.5, 1), contrast=(0.9, 1), saturation=(0.5,0.7), hue=0), transforms.RandomRotation(degrees=33)])
+            import random
+            torch.manual_seed(17)
+            data_transforms = transforms.Compose([torchvision.transforms.RandomSolarize(random.randint(210.0), p=0.2), transforms.RandomHorizontalFlip(p=0.5), transforms.ColorJitter(brightness=(0.7, 1), contrast=(0.7, 1), saturation=(0.7,1), hue=None), transforms.RandomRotation(degrees=random.randint(0,33)), transforms.ToTensor(), transforms.Resize((64, 64))])
         
         # student code end
 

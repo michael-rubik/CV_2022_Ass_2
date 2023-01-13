@@ -78,3 +78,4 @@ def plot_activation_maps(model, image_sample, group_no=None, name=None):
     plt.subplots_adjust(wspace=.05, hspace=.05)
     plt.axis('off')
     plt.plot()
+
