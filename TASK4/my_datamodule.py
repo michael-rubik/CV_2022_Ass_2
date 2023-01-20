@@ -60,7 +60,7 @@ class DataModule:
         # Resize to 64x64 pixel and normalize (transforms.ToTensor() normalizes to [0,1])
         data_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize((64, 64))])
         
-        if self.augmented:
+        if self.augmented and train:
             import random
             torch.manual_seed(17)
             data_transforms = transforms.Compose([transforms.ToTensor(), transforms.RandomSolarize(random.randint(210.0), p=0.2), transforms.RandomHorizontalFlip(p=0.5), transforms.ColorJitter(brightness=(0.7, 1), contrast=(0.7, 1), saturation=(0.7,1), hue=None), transforms.RandomRotation(degrees=random.randint(0,33)), transforms.Resize((64, 64))])
